@@ -1,7 +1,7 @@
 ## Installation
 
 ```
-git clone mesh-test-app. 
+git clone https://github.com/kapitansen/mesh-test-app 
 cd mesh-test-app
 npm install 
 sail composer install
