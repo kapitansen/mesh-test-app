@@ -12,7 +12,6 @@ services:
             - 'host.docker.internal:host-gateway'
         ports:
             - '${APP_PORT:-80}:80'
-            - 6001:6001
         environment:
             WWWUSER: '${WWWUSER}'
             LARAVEL_SAIL: 1
@@ -63,21 +62,29 @@ services:
             RABBITMQ_DEFAULT_PASSWORD: guest
             RABBITMQ_DEFAULT_VHOST: /
         ports:
-          - 15671:15671
-          - 15672:15672
-          - 5671:5671
-          - 5672:5672
-        networks:
-          - sail
-    cron:
-        build:
-            context: ./docker/cron
-            dockerfile: Dockerfile
-        volumes:
-            - '.:/var/www/html'
+            - 15671:15671
+            - 15672:15672
+            - 5671:5671
+            - 5672:5672
         networks:
             - sail
-
+        depends_on:
+            - php-worker
+    php-worker:
+        build:
+            context: ./docker/php-worker
+            dockerfile: Dockerfile
+            args:
+              - LARADOCK_PHP_VERSION=8.1
+              - INSTALL_ZIP_ARCHIVE=true
+              - INSTALL_REDIS=true
+        volumes:
+            - '.:/var/www/html'
+            - ./docker/php-worker/supervisord.d:/etc/supervisord.d
+        networks:
+            - sail
+        ports:
+            - 6001:6001
 networks:
     sail:
         driver: bridge
