@@ -19,11 +19,7 @@ to start:  ```sail up -d```
 run migrations:
 ```sail artisan migrate:fresh```
 
-start queues: 
-```sail artisan queue:work```  
-
-start websockets: 
-```sail artisan websockets:serve```
+worker, queues & websockets starting automatically.
 
 open http://0.0.0.0/
 
